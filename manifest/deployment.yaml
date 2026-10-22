@@ -21,7 +21,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: villa
-          image: stelabiju/villa-devsecops:latest
+          image: stelabiju/villa-devsecops:2
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
