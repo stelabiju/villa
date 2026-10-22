@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.sqlite3
+.env
+.venv/
+venv/
+env/
+.pytest_cache/
+.idea/
+.vscode/
+zap.yaml
+zap_report.html

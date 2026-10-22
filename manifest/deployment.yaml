@@ -1,0 +1,56 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: villa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: villa
+  template:
+    metadata:
+      labels:
+        app: villa
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: villa
+          image: stelabiju/villa-devsecops:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DJANGO_DEBUG
+              value: "False"
+            - name: DJANGO_ALLOWED_HOSTS
+              value: "localhost,127.0.0.1"
+            - name: DJANGO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: villa-secret
+                  key: django-secret-key
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: villa
+spec:
+  type: NodePort
+  selector:
+    app: villa
+  ports:
+    - port: 80
+      targetPort: 8000
+      nodePort: 30080
